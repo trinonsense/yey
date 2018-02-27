@@ -1,9 +1,9 @@
 {
   "name": "yey",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
   "scripts": {
+    "start": "webpack-dev-server -d --progress --open",
+    "build": "webpack"
   },
   "repository": {
     "type": "git",
@@ -13,5 +13,21 @@
   "bugs": {
     "url": "https://github.com/trinonsense/yey/issues"
   },
-  "homepage": "https://github.com/trinonsense/yey"
+  "homepage": "https://github.com/trinonsense/yey",
+  "dependencies": {
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.3",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-react": "^6.24.1",
+    "eslint": "^4.18.1",
+    "eslint-plugin-react": "^7.7.0",
+    "webpack": "^4.0.1",
+    "webpack-cli": "^2.0.9",
+    "webpack-dev-server": "^3.0.0"
+  }
 }
