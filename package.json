@@ -1,0 +1,17 @@
+{
+  "name": "yey",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/trinonsense/yey.git"
+  },
+  "author": "Tri Noensie",
+  "bugs": {
+    "url": "https://github.com/trinonsense/yey/issues"
+  },
+  "homepage": "https://github.com/trinonsense/yey"
+}
