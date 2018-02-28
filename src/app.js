@@ -1,6 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import Search from './Search'
+import Options from './Options'
 import sample from 'lodash.samplesize'
 
 class App extends React.PureComponent {
@@ -8,6 +9,7 @@ class App extends React.PureComponent {
     return (
       <main>
         <Search onResults={this.simplifyOptions.bind(this)} />
+        <Options options={this.state.options} />
       </main>
     )
   }
