@@ -9,6 +9,7 @@ export default class Search extends React.PureComponent {
       isLocated: false,
       isLoading: false,
       category: 'restaurants',
+      priceFilters: [],
       coords: {
         latitude: 30.38673,
         longitude: -97.7104297
@@ -19,9 +20,12 @@ export default class Search extends React.PureComponent {
     this.onLocate = this.onLocate.bind(this)
     this.search = this.search.bind(this)
     this.updateCategory = this.updateCategory.bind(this)
+    this.filterPrice = this.filterPrice.bind(this)
   }
 
   render() {
+    const {priceFilters} = this.state
+
     return (
       <div>
         <form onSubmit={this.onSubmit}>
@@ -30,6 +34,20 @@ export default class Search extends React.PureComponent {
             <option value="bars">Bars</option>
             <option value="coffee">Coffee Shops</option>
           </select>
+          <div>
+            <label>
+              $ <input type="checkbox" value="1" onChange={this.filterPrice} checked={~priceFilters.indexOf(1)} />
+            </label>
+            <label>
+              $$ <input type="checkbox" value="2" onChange={this.filterPrice} checked={~priceFilters.indexOf(2)} />
+            </label>
+            <label>
+              $$$ <input type="checkbox" value="3" onChange={this.filterPrice} checked={~priceFilters.indexOf(3)} />
+            </label>
+            <label>
+              $$$$ <input type="checkbox" value="4" onChange={this.filterPrice} checked={~priceFilters.indexOf(4)} />
+            </label>
+          </div>
           <button type="submit">Search</button>
         </form>
       </div>
@@ -67,6 +85,20 @@ export default class Search extends React.PureComponent {
     this.setState({category: e.target.value})
   }
 
+  filterPrice(e) {
+    const priceFilters = this.state.priceFilters.slice()
+    const price = parseInt(e.target.value)
+
+    if (e.target.checked) {
+      priceFilters.push(price)
+
+    } else {
+      priceFilters.splice(priceFilters.indexOf(price), 1)
+    }
+
+    this.setState({priceFilters})
+  }
+
   search() {
     this.setState({isLoading: true})
     request
@@ -74,7 +106,8 @@ export default class Search extends React.PureComponent {
       .query({
         term: this.state.category,
         latitude: this.state.coords.latitude,
-        longitude: this.state.coords.longitude
+        longitude: this.state.coords.longitude,
+        price: this.state.priceFilters.join(',')
       })
       .then(res => console.log(res.body))
       .catch(err => console.error(err.response))
