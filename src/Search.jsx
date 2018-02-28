@@ -57,11 +57,12 @@ export default class Search extends React.PureComponent {
   onSubmit(e) {
     e.preventDefault()
 
-    if (this.state.located) {
+    if (this.state.isLocated) {
       this.search()
 
     } else {
       if (window.navigator.geolocation) {
+        console.log('locating...')
         this.setState({isLoading: true})
         window.navigator.geolocation.getCurrentPosition(this.onLocate, this.onLocate, {enableHighAccuracy: true})
 
@@ -101,6 +102,7 @@ export default class Search extends React.PureComponent {
 
   search() {
     this.setState({isLoading: true})
+    console.log('loading...')
     request
       .get('https://us-central1-yey-y3y.cloudfunctions.net/search')
       .query({
