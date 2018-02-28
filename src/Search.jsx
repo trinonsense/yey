@@ -15,7 +15,7 @@ export default class Search extends React.PureComponent {
       }
     }
 
-    this.onClick = this.onClick.bind(this)
+    this.onSubmit = this.onSubmit.bind(this)
     this.onLocate = this.onLocate.bind(this)
     this.search = this.search.bind(this)
     this.updateCategory = this.updateCategory.bind(this)
@@ -24,17 +24,19 @@ export default class Search extends React.PureComponent {
   render() {
     return (
       <div>
-        <select onChange={this.updateCategory} value={this.state.category}>
-          <option value="restaurants">Restaurants</option>
-          <option value="bars">Bars</option>
-          <option value="coffee">Coffee Shops</option>
-        </select>
-        <button onClick={this.onClick}>Search</button>
+        <form onSubmit={this.onSubmit}>
+          <select onChange={this.updateCategory} value={this.state.category}>
+            <option value="restaurants">Restaurants</option>
+            <option value="bars">Bars</option>
+            <option value="coffee">Coffee Shops</option>
+          </select>
+          <button type="submit">Search</button>
+        </form>
       </div>
     )
   }
 
-  onClick(e) {
+  onSubmit(e) {
     e.preventDefault()
 
     if (this.state.located) {
