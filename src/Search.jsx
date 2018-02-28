@@ -8,6 +8,7 @@ export default class Search extends React.PureComponent {
     this.state = {
       isLocated: false,
       isLoading: false,
+      category: 'restaurants',
       coords: {
         latitude: 30.38673,
         longitude: -97.7104297
@@ -17,12 +18,17 @@ export default class Search extends React.PureComponent {
     this.onClick = this.onClick.bind(this)
     this.onLocate = this.onLocate.bind(this)
     this.search = this.search.bind(this)
+    this.updateCategory = this.updateCategory.bind(this)
   }
 
   render() {
     return (
       <div>
-        <h2>Search!</h2>
+        <select onChange={this.updateCategory} value={this.state.category}>
+          <option value="restaurants">Restaurants</option>
+          <option value="bars">Bars</option>
+          <option value="coffee">Coffee Shops</option>
+        </select>
         <button onClick={this.onClick}>Search</button>
       </div>
     )
@@ -55,12 +61,16 @@ export default class Search extends React.PureComponent {
     }
   }
 
+  updateCategory(e) {
+    this.setState({category: e.target.value})
+  }
+
   search() {
     this.setState({isLoading: true})
     request
       .get('https://us-central1-yey-y3y.cloudfunctions.net/search')
       .query({
-        term: 'restaurant',
+        term: this.state.category,
         latitude: this.state.coords.latitude,
         longitude: this.state.coords.longitude
       })
