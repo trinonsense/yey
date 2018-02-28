@@ -109,7 +109,8 @@ export default class Search extends React.PureComponent {
         term: this.state.category,
         latitude: this.state.coords.latitude,
         longitude: this.state.coords.longitude,
-        price: this.state.priceFilters.join(',')
+        price: this.state.priceFilters.join(','),
+        open_now: true
       })
       .then(res => console.log(res.body))
       .catch(err => console.error(err.response))
