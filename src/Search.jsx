@@ -1,6 +1,13 @@
 import React from 'react'
 import request from 'superagent'
 
+const DISTANCES = {
+  shortwalk: 804,
+  walking: 1609,
+  biking: 3218,
+  driving: 8046
+}
+
 export default class Search extends React.PureComponent {
   constructor() {
     super()
@@ -9,6 +16,7 @@ export default class Search extends React.PureComponent {
       isLocated: false,
       isLoading: false,
       category: 'restaurants',
+      distance: 'shortwalk',
       priceFilters: [],
       coords: {
         latitude: 30.38673,
@@ -20,6 +28,7 @@ export default class Search extends React.PureComponent {
     this.onLocate = this.onLocate.bind(this)
     this.search = this.search.bind(this)
     this.updateCategory = this.updateCategory.bind(this)
+    this.updateDistance = this.updateDistance.bind(this)
     this.filterPrice = this.filterPrice.bind(this)
   }
 
@@ -29,11 +38,23 @@ export default class Search extends React.PureComponent {
     return (
       <div>
         <form onSubmit={this.onSubmit}>
-          <select onChange={this.updateCategory} value={this.state.category}>
-            <option value="restaurants">Restaurants</option>
-            <option value="bars">Bars</option>
-            <option value="coffee">Coffee Shops</option>
-          </select>
+          <div>
+            <label>Category</label>
+            <select onChange={this.updateCategory} value={this.state.category}>
+              <option value="restaurants">Restaurants</option>
+              <option value="bars">Bars</option>
+              <option value="coffee">Coffee Shops</option>
+            </select>
+          </div>
+          <div>
+            <label>Distance</label>
+            <select onChange={this.updateDistance} value={this.state.distance}>
+              <option value="shortwalk">Short Walk (blocks)</option>
+              <option value="walking">Walking (1 mi.)</option>
+              <option value="biking">Biking (2 mi.)</option>
+              <option value="driving">Driving (5 mi.)</option>
+            </select>
+          </div>
           <div>
             <label>
               $ <input type="checkbox" value="1" onChange={this.filterPrice} checked={~priceFilters.indexOf(1)} />
@@ -100,6 +121,10 @@ export default class Search extends React.PureComponent {
     this.setState({priceFilters})
   }
 
+  updateDistance(e) {
+    this.setState({distance: e.target.value})
+  }
+
   search() {
     this.setState({isLoading: true})
     console.log('loading...')
@@ -110,6 +135,7 @@ export default class Search extends React.PureComponent {
         latitude: this.state.coords.latitude,
         longitude: this.state.coords.longitude,
         price: this.state.priceFilters.join(','),
+        radius: DISTANCES[this.state.distance],
         open_now: true
       })
       .then(res => console.log(res.body))
