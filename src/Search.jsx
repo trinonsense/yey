@@ -1,5 +1,6 @@
 import React from 'react'
 import request from 'superagent'
+import PropTypes from 'prop-types'
 
 const DISTANCES = {
   shortwalk: 804,
@@ -8,30 +9,11 @@ const DISTANCES = {
   driving: 8046
 }
 
+const propTypes = {
+  onResults: PropTypes.func.isRequired
+}
+
 export default class Search extends React.PureComponent {
-  constructor() {
-    super()
-
-    this.state = {
-      isLocated: false,
-      isLoading: false,
-      category: 'restaurants',
-      distance: 'shortwalk',
-      priceFilters: [],
-      coords: {
-        latitude: 30.38673,
-        longitude: -97.7104297
-      }
-    }
-
-    this.onSubmit = this.onSubmit.bind(this)
-    this.onLocate = this.onLocate.bind(this)
-    this.search = this.search.bind(this)
-    this.updateCategory = this.updateCategory.bind(this)
-    this.updateDistance = this.updateDistance.bind(this)
-    this.filterPrice = this.filterPrice.bind(this)
-  }
-
   render() {
     const {priceFilters} = this.state
 
@@ -73,6 +55,29 @@ export default class Search extends React.PureComponent {
         </form>
       </div>
     )
+  }
+
+  constructor() {
+    super()
+
+    this.state = {
+      isLocated: false,
+      isLoading: false,
+      category: 'restaurants',
+      distance: 'shortwalk',
+      priceFilters: [],
+      coords: {
+        latitude: 30.38673,
+        longitude: -97.7104297
+      }
+    }
+
+    this.onSubmit = this.onSubmit.bind(this)
+    this.onLocate = this.onLocate.bind(this)
+    this.search = this.search.bind(this)
+    this.updateCategory = this.updateCategory.bind(this)
+    this.updateDistance = this.updateDistance.bind(this)
+    this.filterPrice = this.filterPrice.bind(this)
   }
 
   onSubmit(e) {
@@ -136,9 +141,12 @@ export default class Search extends React.PureComponent {
         longitude: this.state.coords.longitude,
         price: this.state.priceFilters.join(','),
         radius: DISTANCES[this.state.distance],
+        limit: 50,
         open_now: true
       })
-      .then(res => console.log(res.body))
-      .catch(err => console.error(err.response))
+      .then(res => this.props.onResults(res.body.businesses))
+      .catch(err => console.error(err))
   }
 }
+
+Search.propTypes = propTypes

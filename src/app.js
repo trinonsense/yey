@@ -1,15 +1,27 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import Search from './search'
+import Search from './Search'
+import sample from 'lodash.samplesize'
 
 class App extends React.PureComponent {
   render() {
     return (
       <main>
-        <h1>Yey!</h1>
-        <Search />
+        <Search onResults={this.simplifyOptions.bind(this)} />
       </main>
     )
+  }
+
+  constructor() {
+    super()
+
+    this.state = {
+      options: undefined
+    }
+  }
+
+  simplifyOptions(results) {
+    this.setState({options: sample(results, 3)})
   }
 }
 
