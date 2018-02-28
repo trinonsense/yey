@@ -7,6 +7,8 @@ const propTypes = {
 
 export default class Options extends React.PureComponent {
   render() {
+    if (!this.props.options) return null
+
     return (
       <div>
         {this.props.options.map(business =>
@@ -23,14 +25,15 @@ export default class Options extends React.PureComponent {
             </ul>
           </div>
         )}
+
+        {!this.props.options.length?
+          <p>No Results</p>
+          :null}
       </div>
     )
   }
 }
 
 Options.propTypes = propTypes
-Options.defaultProps = {
-  options: []
-}
 
 
