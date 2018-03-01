@@ -78,7 +78,6 @@ export default class Search extends React.PureComponent {
     }
 
     this.onSubmit = this.onSubmit.bind(this)
-    this.onLocate = this.onLocate.bind(this)
     this.search = this.search.bind(this)
     this.updateCategory = this.updateCategory.bind(this)
     this.updateDistance = this.updateDistance.bind(this)
@@ -96,25 +95,23 @@ export default class Search extends React.PureComponent {
       this.search()
 
     } else {
-      if (window.navigator.geolocation) {
-        console.log('locating...')
-        this.setState({isLoading: true})
-        window.navigator.geolocation.getCurrentPosition(this.onLocate, this.onLocate, {enableHighAccuracy: true})
+      this.locate().then(({coords}) =>
+        this.setState({coords, isLocated: true}, this.search)
 
-      } else {
-        this.onLocate()
-      }
+      ).catch(() =>
+        this.setState({isLocated: true}, this.search)
+      )
     }
   }
 
-  onLocate(res) {
-    this.setState({isLocated: true})
+  locate() {
+    return new Promise((resolve, reject) => {
+      if (!window.navigator.geolocation) return reject()
 
-    if (res && res.coords) {
-      this.setState({coords: res.coords}, this.search)
-    } else {
-      this.search()
-    }
+      console.log('locating...')
+      this.setState({isLoading: true})
+      window.navigator.geolocation.getCurrentPosition(resolve, reject)
+    })
   }
 
   updateCategory(e) {
