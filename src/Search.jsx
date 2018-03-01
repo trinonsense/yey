@@ -15,7 +15,10 @@ const propTypes = {
 
 export default class Search extends React.PureComponent {
   render() {
-    const {priceFilters} = this.state
+    const {
+      isLoading,
+      priceFilters
+    } = this.state
 
     return (
       <div>
@@ -51,7 +54,9 @@ export default class Search extends React.PureComponent {
               $$$$ <input type="checkbox" value="4" onChange={this.filterPrice} checked={~priceFilters.indexOf(4)} />
             </label>
           </div>
-          <button type="submit">Search</button>
+          <button type="submit" disabled={isLoading}>
+            {isLoading? 'Loading...' : 'Search'}
+          </button>
         </form>
       </div>
     )
@@ -78,6 +83,10 @@ export default class Search extends React.PureComponent {
     this.updateCategory = this.updateCategory.bind(this)
     this.updateDistance = this.updateDistance.bind(this)
     this.filterPrice = this.filterPrice.bind(this)
+  }
+
+  componentDidMount() {
+    this.search()
   }
 
   onSubmit(e) {
@@ -144,8 +153,14 @@ export default class Search extends React.PureComponent {
         limit: 50,
         open_now: true
       })
-      .then(res => this.props.onResults(res.body.businesses))
-      .catch(err => console.error(err))
+      .then(res => {
+        this.props.onResults(res.body.businesses)
+        this.setState({isLoading: false})
+      })
+      .catch(err => {
+        console.error(err)
+        this.setState({isLoading: false})
+      })
   }
 }
 
