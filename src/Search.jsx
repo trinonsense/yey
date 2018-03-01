@@ -1,9 +1,9 @@
 import React from 'react'
 import request from 'superagent'
 import PropTypes from 'prop-types'
+import cx from 'classnames'
 
 const DISTANCES = {
-  shortwalk: 804,
   walking: 1609,
   biking: 3218,
   driving: 8046
@@ -34,7 +34,6 @@ export default class Search extends React.PureComponent {
           <div>
             <label>Distance</label>
             <select onChange={this.updateDistance} value={this.state.distance}>
-              <option value="shortwalk">Short Walk (blocks)</option>
               <option value="walking">Walking (1 mi.)</option>
               <option value="biking">Biking (2 mi.)</option>
               <option value="driving">Driving (5 mi.)</option>
@@ -54,8 +53,8 @@ export default class Search extends React.PureComponent {
               $$$$ <input type="checkbox" value="4" onChange={this.filterPrice} checked={~priceFilters.indexOf(4)} />
             </label>
           </div>
-          <button type="submit" disabled={isLoading}>
-            {isLoading? 'Loading...' : 'Search'}
+          <button className={cx('button', {'is-loading':isLoading})} disabled={isLoading} type="submit">
+            Search
           </button>
         </form>
       </div>
@@ -69,7 +68,7 @@ export default class Search extends React.PureComponent {
       isLocated: false,
       isLoading: false,
       category: 'restaurants',
-      distance: 'shortwalk',
+      distance: 'walking',
       priceFilters: [],
       coords: {
         latitude: 30.38673,
