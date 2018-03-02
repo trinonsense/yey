@@ -101,7 +101,7 @@ export default class Search extends React.PureComponent {
   }
 
   componentDidMount() {
-    this.search()
+    // this.search()
   }
 
   onSubmit(e) {

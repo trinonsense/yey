@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "scripts": {
     "start": "webpack-dev-server -d --progress --open",
-    "build": "webpack"
+    "build": "webpack -p --progress"
   },
   "repository": {
     "type": "git",
