@@ -2,60 +2,77 @@ import React from 'react'
 import request from 'superagent'
 import cx from 'classnames'
 import repeat from 'lodash.repeat'
+import styled from 'styled-components'
 
 export default class Search extends React.PureComponent {
   render() {
     const {isLoading} = this.state
 
     return (
-      <section>
+      <section className="section">
         <form onSubmit={this.onSubmit}>
-          <div>
-            <h3>Category</h3>
-            <div className="buttons has-addons">
-              {Search.CATEGORIES.map(category =>
-                <Category
-                  key={category.value}
-                  category={category}
-                  onClick={this.updateCategory}
-                  selected={this.state.category === category}
-                />
-              )}
+          <div className="field">
+            <label className="label">Category</label>
+            <div className="control">
+              <div className="buttons has-addons">
+                {Search.CATEGORIES.map(category =>
+                  <Category
+                    key={category.value}
+                    category={category}
+                    onClick={this.updateCategory}
+                    selected={this.state.category === category}
+                  />
+                )}
+              </div>
+            </div>
+
+          </div>
+
+          <div className="field">
+            <label className="label">
+              <span>Distance </span>
+              <span className="is-size-7 has-text-grey has-text-weight-normal">(optional)</span>
+            </label>
+            <div className="control">
+              <div className="buttons has-addons">
+                {Search.DISTANCES.map(distance =>
+                  <Distance
+                    key={distance.value}
+                    distance={distance}
+                    onClick={this.updateDistance}
+                    selected={this.state.distance === distance}
+                  />
+                )}
+              </div>
             </div>
           </div>
 
-          <div>
-            <h3>Distance</h3>
-            <div className="buttons has-addons">
-              {Search.DISTANCES.map(distance =>
-                <Distance
-                  key={distance.value}
-                  distance={distance}
-                  onClick={this.updateDistance}
-                  selected={this.state.distance === distance}
-                />
-              )}
+          <div className="field">
+            <label className="label">
+              <span>Prices </span>
+              <span className="is-size-7 has-text-grey has-text-weight-normal">(optional)</span>
+            </label>
+            <div className="control">
+              <div className="buttons has-addons">
+                {Search.PRICES.map(id =>
+                  <Price
+                    key={id}
+                    id={id}
+                    onClick={this.filterPrice}
+                    selected={~this.state.priceFilters.indexOf(id)}
+                  />
+                )}
+              </div>
             </div>
           </div>
 
-          <div>
-            <h3>Prices</h3>
-            <div className="buttons has-addons">
-              {Search.PRICES.map(id =>
-                <Price
-                  key={id}
-                  id={id}
-                  onClick={this.filterPrice}
-                  selected={~this.state.priceFilters.indexOf(id)}
-                />
-              )}
-            </div>
-          </div>
-
-          <div>
-            <button className={cx('button', {'is-loading':isLoading})} disabled={isLoading} type="submit">
-              Search
-            </button>
+          <div className="field">
+            <YeyButton className={cx('button is-medium is-info', {'is-loading':isLoading})} disabled={isLoading}>
+              <span>Yey</span>
+              <span className="icon">
+                <i className="fa fa-random" />
+              </span>
+            </YeyButton>
           </div>
         </form>
       </section>
@@ -68,8 +85,8 @@ export default class Search extends React.PureComponent {
     this.state = {
       isLocated: false,
       isLoading: false,
-      category: Search.CATEGORIES[0],
-      distance: '',
+      category: null,
+      distance: null,
       priceFilters: [],
       coords: {
         latitude: 30.38673,
@@ -112,7 +129,9 @@ export default class Search extends React.PureComponent {
 
   updateCategory(e, category) {
     e.preventDefault()
-    this.setState({category})
+    this.setState({
+      category: category === this.state.category ? null : category
+    })
   }
 
   filterPrice(e) {
@@ -144,7 +163,7 @@ export default class Search extends React.PureComponent {
     request
       .get('https://us-central1-yey-y3y.cloudfunctions.net/search')
       .query({
-        term: this.state.category,
+        term: this.state.category && this.state.category.value,
         latitude: this.state.coords.latitude,
         longitude: this.state.coords.longitude,
         price: this.state.priceFilters.join(','),
@@ -171,7 +190,7 @@ Search.DISTANCES = [
 Search.CATEGORIES = [
   {display_name: 'Restaurants', icon: 'utensils', value: 'restaurants'},
   {display_name: 'Bars', icon: 'glass-martini', value: 'bars'},
-  {display_name: 'Coffee Shops', icon: 'coffee', value: 'coffee'}
+  {display_name: 'Coffee', icon: 'coffee', value: 'coffee'}
 ]
 
 const Category = ({category, onClick, selected}) => (
@@ -197,3 +216,10 @@ const Distance = ({distance, selected, onClick}) => (
     <span>{distance.display_name}</span>
   </button>
 )
+
+const YeyButton = styled.button`
+  width: 100%;
+  margin-top: 15px;
+  text-transform: uppercase;
+  font-weight: bold;
+`
