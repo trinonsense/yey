@@ -11,12 +11,17 @@ export default class Search extends React.PureComponent {
       <div>
         <form onSubmit={this.onSubmit}>
           <div>
-            <label>Category</label>
-            <select onChange={this.updateCategory} value={this.state.category}>
-              <option value="restaurants">Restaurants</option>
-              <option value="bars">Bars</option>
-              <option value="coffee">Coffee Shops</option>
-            </select>
+            <h3>Category</h3>
+            <div className="buttons has-addons">
+              {Search.CATEGORIES.map(category =>
+                <Category
+                  key={category.value}
+                  category={category}
+                  onClick={this.updateCategory}
+                  selected={this.state.category === category}
+                />
+              )}
+            </div>
           </div>
 
           <div>
@@ -47,9 +52,11 @@ export default class Search extends React.PureComponent {
             </div>
           </div>
 
-          <button className={cx('button', {'is-loading':isLoading})} disabled={isLoading} type="submit">
-            Search
-          </button>
+          <div>
+            <button className={cx('button', {'is-loading':isLoading})} disabled={isLoading} type="submit">
+              Search
+            </button>
+          </div>
         </form>
       </div>
     )
@@ -61,7 +68,7 @@ export default class Search extends React.PureComponent {
     this.state = {
       isLocated: false,
       isLoading: false,
-      category: 'restaurants',
+      category: Search.CATEGORIES[0],
       distance: '',
       priceFilters: [],
       coords: {
@@ -103,8 +110,9 @@ export default class Search extends React.PureComponent {
     })
   }
 
-  updateCategory(e) {
-    this.setState({category: e.target.value})
+  updateCategory(e, category) {
+    e.preventDefault()
+    this.setState({category})
   }
 
   filterPrice(e) {
@@ -160,6 +168,17 @@ Search.DISTANCES = [
   {display_name: 'Biking (2 mi.)', value: 3218},
   {display_name: 'Driving (5 mi.)', value: 8046}
 ]
+Search.CATEGORIES = [
+  {display_name: 'Restaurants', value: 'restaurants'},
+  {display_name: 'Bars', value: 'bars'},
+  {display_name: 'Coffee Shops', value: 'coffee'}
+]
+
+const Category = ({category, onClick, selected}) => (
+  <button onClick={e => onClick(e, category)} className={cx('button', {'is-primary': selected})}>
+    {category.display_name}
+  </button>
+)
 
 const Price = ({id, selected, onClick}) => (
   <button value={id} onClick={onClick} className={cx('button', {'is-primary': selected})}>
@@ -168,7 +187,7 @@ const Price = ({id, selected, onClick}) => (
 )
 
 const Distance = ({distance, selected, onClick}) => (
-  <button value={distance.value} onClick={e => onClick(e, distance)} className={cx('button', {'is-primary': selected})}>
+  <button onClick={e => onClick(e, distance)} className={cx('button', {'is-primary': selected})}>
     {distance.display_name}
   </button>
 )
