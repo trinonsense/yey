@@ -25,14 +25,10 @@ export default class Search extends React.PureComponent {
                 )}
               </div>
             </div>
-
           </div>
 
           <div className="field">
-            <label className="label">
-              <span>Distance </span>
-              <span className="is-size-7 has-text-grey has-text-weight-normal">(optional)</span>
-            </label>
+            <label className="label">Distance</label>
             <div className="control">
               <div className="buttons has-addons">
                 {Search.DISTANCES.map(distance =>
@@ -48,10 +44,7 @@ export default class Search extends React.PureComponent {
           </div>
 
           <div className="field">
-            <label className="label">
-              <span>Prices </span>
-              <span className="is-size-7 has-text-grey has-text-weight-normal">(optional)</span>
-            </label>
+            <label className="label">Prices</label>
             <div className="control">
               <div className="buttons has-addons">
                 {Search.PRICES.map(id =>
@@ -99,6 +92,10 @@ export default class Search extends React.PureComponent {
     this.updateCategory = this.updateCategory.bind(this)
     this.updateDistance = this.updateDistance.bind(this)
     this.filterPrice = this.filterPrice.bind(this)
+  }
+
+  componentDidMount() {
+    this.search()
   }
 
   onSubmit(e) {
