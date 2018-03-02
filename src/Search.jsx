@@ -8,7 +8,7 @@ export default class Search extends React.PureComponent {
     const {isLoading} = this.state
 
     return (
-      <div>
+      <section>
         <form onSubmit={this.onSubmit}>
           <div>
             <h3>Category</h3>
@@ -58,7 +58,7 @@ export default class Search extends React.PureComponent {
             </button>
           </div>
         </form>
-      </div>
+      </section>
     )
   }
 
@@ -164,19 +164,22 @@ export default class Search extends React.PureComponent {
 
 Search.PRICES = [1, 2, 3, 4]
 Search.DISTANCES = [
-  {display_name: 'Walking (1 mi.)', value: 1609},
-  {display_name: 'Biking (2 mi.)', value: 3218},
-  {display_name: 'Driving (5 mi.)', value: 8046}
+  {display_name: '~1 mi', icon: 'street-view', value: 1609},
+  {display_name: '~2 mi', icon: 'bicycle', value: 3218},
+  {display_name: '~5 mi', icon: 'car', value: 8046}
 ]
 Search.CATEGORIES = [
-  {display_name: 'Restaurants', value: 'restaurants'},
-  {display_name: 'Bars', value: 'bars'},
-  {display_name: 'Coffee Shops', value: 'coffee'}
+  {display_name: 'Restaurants', icon: 'utensils', value: 'restaurants'},
+  {display_name: 'Bars', icon: 'glass-martini', value: 'bars'},
+  {display_name: 'Coffee Shops', icon: 'coffee', value: 'coffee'}
 ]
 
 const Category = ({category, onClick, selected}) => (
   <button onClick={e => onClick(e, category)} className={cx('button', {'is-primary': selected})}>
-    {category.display_name}
+    <span className="icon">
+      <i className={'fas fa-' + category.icon} />
+    </span>
+    <span>{category.display_name}</span>
   </button>
 )
 
@@ -188,6 +191,9 @@ const Price = ({id, selected, onClick}) => (
 
 const Distance = ({distance, selected, onClick}) => (
   <button onClick={e => onClick(e, distance)} className={cx('button', {'is-primary': selected})}>
-    {distance.display_name}
+    <span className="icon">
+      <i className={'fas fa-' + distance.icon} />
+    </span>
+    <span>{distance.display_name}</span>
   </button>
 )

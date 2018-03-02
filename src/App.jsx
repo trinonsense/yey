@@ -10,18 +10,12 @@ export default class App extends React.PureComponent {
   render() {
     return (
       <div>
-        <section>
-          {this.state.pane === SEARCH?
-            <Search onResults={this.simplifyOptions.bind(this)} />
-          :null}
+        <Search onResults={this.simplifyOptions.bind(this)} />
 
-          {this.state.pane === OPTIONS?
-            <Options
-              options={this.state.options}
-              onSearch={this.openSearch.bind(this)}
-            />
-          :null}
-        </section>
+        <Options
+          options={this.state.options}
+          onSearch={this.openSearch.bind(this)}
+        />
       </div>
     )
   }
