@@ -8,16 +8,17 @@ const OPTIONS = 'OPTIONS'
 
 export default class App extends React.PureComponent {
   render() {
-    return (
-      <div>
-        <Search onResults={this.simplifyOptions.bind(this)} />
+    return [
+      <Search
+        key="search"
+        onResults={this.simplifyOptions.bind(this)}
+      />,
 
-        <Options
-          options={this.state.options}
-          onSearch={this.openSearch.bind(this)}
-        />
-      </div>
-    )
+      <Options
+        key="options"
+        options={this.state.options}
+      />
+    ]
   }
 
   constructor() {
@@ -34,9 +35,5 @@ export default class App extends React.PureComponent {
       pane: OPTIONS,
       options: sample(results, 3)
     })
-  }
-
-  openSearch() {
-    this.setState({pane: SEARCH})
   }
 }
