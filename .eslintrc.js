@@ -20,6 +20,7 @@ module.exports = {
     'linebreak-style': [ 'error', 'unix' ],
     'no-console': 'off',
     indent: 'off',
+    'react/prop-types': 'off',
     quotes: [ 'error', 'single' ],
     semi: [ 'error', 'never' ]
   }

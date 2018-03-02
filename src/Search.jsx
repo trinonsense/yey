@@ -1,7 +1,7 @@
 import React from 'react'
 import request from 'superagent'
-import PropTypes from 'prop-types'
 import cx from 'classnames'
+import repeat from 'lodash.repeat'
 
 const DISTANCES = {
   walking: 1609,
@@ -9,16 +9,9 @@ const DISTANCES = {
   driving: 8046
 }
 
-const propTypes = {
-  onResults: PropTypes.func.isRequired
-}
-
 export default class Search extends React.PureComponent {
   render() {
-    const {
-      isLoading,
-      priceFilters
-    } = this.state
+    const {isLoading} = this.state
 
     return (
       <div>
@@ -40,18 +33,17 @@ export default class Search extends React.PureComponent {
             </select>
           </div>
           <div>
-            <label>
-              $ <input type="checkbox" value="1" onChange={this.filterPrice} checked={~priceFilters.indexOf(1)} />
-            </label>
-            <label>
-              $$ <input type="checkbox" value="2" onChange={this.filterPrice} checked={~priceFilters.indexOf(2)} />
-            </label>
-            <label>
-              $$$ <input type="checkbox" value="3" onChange={this.filterPrice} checked={~priceFilters.indexOf(3)} />
-            </label>
-            <label>
-              $$$$ <input type="checkbox" value="4" onChange={this.filterPrice} checked={~priceFilters.indexOf(4)} />
-            </label>
+            <h3>Prices</h3>
+            <div className="buttons has-addons">
+              {Search.PRICES.map(id =>
+                <Price
+                  key={id}
+                  id={id}
+                  onClick={this.filterPrice}
+                  selected={~this.state.priceFilters.indexOf(id)}
+                />
+              )}
+            </div>
           </div>
           <button className={cx('button', {'is-loading':isLoading})} disabled={isLoading} type="submit">
             Search
@@ -81,10 +73,6 @@ export default class Search extends React.PureComponent {
     this.updateCategory = this.updateCategory.bind(this)
     this.updateDistance = this.updateDistance.bind(this)
     this.filterPrice = this.filterPrice.bind(this)
-  }
-
-  componentDidMount() {
-    this.search()
   }
 
   onSubmit(e) {
@@ -118,14 +106,16 @@ export default class Search extends React.PureComponent {
   }
 
   filterPrice(e) {
+    e.preventDefault()
     const priceFilters = this.state.priceFilters.slice()
     const price = parseInt(e.target.value)
+    const index = priceFilters.indexOf(price)
 
-    if (e.target.checked) {
-      priceFilters.push(price)
+    if (~index) {
+      priceFilters.splice(index, 1)
 
     } else {
-      priceFilters.splice(priceFilters.indexOf(price), 1)
+      priceFilters.push(price)
     }
 
     this.setState({priceFilters})
@@ -150,8 +140,7 @@ export default class Search extends React.PureComponent {
         open_now: true
       })
       .then(res => {
-        this.props.onResults(res.body.businesses)
-        this.setState({isLoading: false})
+        this.setState({isLoading: false}, () => this.props.onResults(res.body.businesses))
       })
       .catch(err => {
         console.error(err)
@@ -160,4 +149,9 @@ export default class Search extends React.PureComponent {
   }
 }
 
-Search.propTypes = propTypes
+Search.PRICES = [1, 2, 3, 4]
+const Price = ({id, selected, onClick}) => (
+  <button value={id} onClick={onClick} className={cx('button', {'is-primary': selected})}>
+    {repeat('$', id)}
+  </button>
+)
