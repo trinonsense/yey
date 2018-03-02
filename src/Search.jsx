@@ -3,12 +3,6 @@ import request from 'superagent'
 import cx from 'classnames'
 import repeat from 'lodash.repeat'
 
-const DISTANCES = {
-  walking: 1609,
-  biking: 3218,
-  driving: 8046
-}
-
 export default class Search extends React.PureComponent {
   render() {
     const {isLoading} = this.state
@@ -24,14 +18,21 @@ export default class Search extends React.PureComponent {
               <option value="coffee">Coffee Shops</option>
             </select>
           </div>
+
           <div>
-            <label>Distance</label>
-            <select onChange={this.updateDistance} value={this.state.distance}>
-              <option value="walking">Walking (1 mi.)</option>
-              <option value="biking">Biking (2 mi.)</option>
-              <option value="driving">Driving (5 mi.)</option>
-            </select>
+            <h3>Distance</h3>
+            <div className="buttons has-addons">
+              {Search.DISTANCES.map(distance =>
+                <Distance
+                  key={distance.value}
+                  distance={distance}
+                  onClick={this.updateDistance}
+                  selected={this.state.distance === distance}
+                />
+              )}
+            </div>
           </div>
+
           <div>
             <h3>Prices</h3>
             <div className="buttons has-addons">
@@ -45,6 +46,7 @@ export default class Search extends React.PureComponent {
               )}
             </div>
           </div>
+
           <button className={cx('button', {'is-loading':isLoading})} disabled={isLoading} type="submit">
             Search
           </button>
@@ -60,7 +62,7 @@ export default class Search extends React.PureComponent {
       isLocated: false,
       isLoading: false,
       category: 'restaurants',
-      distance: 'walking',
+      distance: '',
       priceFilters: [],
       coords: {
         latitude: 30.38673,
@@ -121,8 +123,11 @@ export default class Search extends React.PureComponent {
     this.setState({priceFilters})
   }
 
-  updateDistance(e) {
-    this.setState({distance: e.target.value})
+  updateDistance(e, distance) {
+    e.preventDefault()
+    this.setState({
+      distance: distance === this.state.distance? null : distance
+    })
   }
 
   search() {
@@ -135,7 +140,7 @@ export default class Search extends React.PureComponent {
         latitude: this.state.coords.latitude,
         longitude: this.state.coords.longitude,
         price: this.state.priceFilters.join(','),
-        radius: DISTANCES[this.state.distance],
+        radius: this.state.distance && this.state.distance.value,
         limit: 50,
         open_now: true
       })
@@ -150,8 +155,20 @@ export default class Search extends React.PureComponent {
 }
 
 Search.PRICES = [1, 2, 3, 4]
+Search.DISTANCES = [
+  {display_name: 'Walking (1 mi.)', value: 1609},
+  {display_name: 'Biking (2 mi.)', value: 3218},
+  {display_name: 'Driving (5 mi.)', value: 8046}
+]
+
 const Price = ({id, selected, onClick}) => (
   <button value={id} onClick={onClick} className={cx('button', {'is-primary': selected})}>
     {repeat('$', id)}
+  </button>
+)
+
+const Distance = ({distance, selected, onClick}) => (
+  <button value={distance.value} onClick={e => onClick(e, distance)} className={cx('button', {'is-primary': selected})}>
+    {distance.display_name}
   </button>
 )
