@@ -9,17 +9,17 @@ export default class Options extends React.PureComponent {
         {this.props.options.map(business =>
           <div className="media" key={business.id}>
             <figure className="media-left">
-              <p className="image is-64x64">
+              <p className="image is-96x96">
                 <img src={business.image_url} />
               </p>
             </figure>
             <div className="media-content">
               <div className="content">
-                <p className="title">
+                <p className="title is-4" style={{marginBottom: '1.2em'}}>
                   <a href={business.url} target="_blank">{business.name}</a>
                 </p>
                 <p className="subtitle">
-                  <div className="tags has-addons">
+                  <span className="tags has-addons">
                     <span className="tag is-warning is-marginless">
                       <span>{business.rating}</span>
                       <span className="icon">
@@ -27,7 +27,7 @@ export default class Options extends React.PureComponent {
                       </span>
                     </span>
                     <span className="tag is-success is-marginless">{business.price}</span>
-                  </div>
+                  </span>
                 </p>
                 <p className="is-marginless">
                   {business.categories.map((category, i, cs) =>
@@ -36,7 +36,7 @@ export default class Options extends React.PureComponent {
                 </p>
                 <p className="is-marginless">
                   <a href={`https://www.google.com/maps/search/?api=1&query=${business.name},${encodeURIComponent(business.location.display_address.join(','))}`} target="_blank">
-                    {business.location.display_address.join(', ')}
+                    {precisionRound(toMiles(business.distance), 1)} miles away
                   </a>
                 </p>
                 <p className="is-marginless">
@@ -53,4 +53,13 @@ export default class Options extends React.PureComponent {
       </section>
     )
   }
+}
+
+function toMiles(meters) {
+  return meters * 0.000621371192
+}
+
+function precisionRound(number, precision) {
+  var factor = Math.pow(10, precision)
+  return Math.round(number * factor) / factor
 }

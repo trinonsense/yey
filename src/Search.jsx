@@ -7,66 +7,72 @@ import styled from 'styled-components'
 export default class Search extends React.PureComponent {
   render() {
     const {isLoading} = this.state
+    const {fullWidth} = this.props
 
     return (
       <section className="section">
         <form onSubmit={this.onSubmit}>
-          <div className="field">
-            <label className="label">Category</label>
-            <div className="control">
-              <div className="buttons has-addons">
-                {Search.CATEGORIES.map(category =>
-                  <Category
-                    key={category.value}
-                    category={category}
-                    onClick={this.updateCategory}
-                    selected={this.state.category === category}
-                  />
-                )}
+          <Fields fullWidth={fullWidth}>
+            <div className="field">
+              <label className="label">Category</label>
+              <div className="control">
+                <div className="buttons has-addons">
+                  {Search.CATEGORIES.map(category =>
+                    <Category
+                      key={category.value}
+                      category={category}
+                      onClick={this.updateCategory}
+                      selected={this.state.category === category}
+                      small={this.props.options}
+                    />
+                  )}
+                </div>
               </div>
             </div>
-          </div>
 
-          <div className="field">
-            <label className="label">Distance</label>
-            <div className="control">
-              <div className="buttons has-addons">
-                {Search.DISTANCES.map(distance =>
-                  <Distance
-                    key={distance.value}
-                    distance={distance}
-                    onClick={this.updateDistance}
-                    selected={this.state.distance === distance}
-                  />
-                )}
+            <div className="field">
+              <label className="label">Distance</label>
+              <div className="control">
+                <div className="buttons has-addons">
+                  {Search.DISTANCES.map(distance =>
+                    <Distance
+                      key={distance.value}
+                      distance={distance}
+                      onClick={this.updateDistance}
+                      selected={this.state.distance === distance}
+                      small={this.props.options}
+                    />
+                  )}
+                </div>
               </div>
             </div>
-          </div>
 
-          <div className="field">
-            <label className="label">Prices</label>
-            <div className="control">
-              <div className="buttons has-addons">
-                {Search.PRICES.map(id =>
-                  <Price
-                    key={id}
-                    id={id}
-                    onClick={this.filterPrice}
-                    selected={~this.state.priceFilters.indexOf(id)}
-                  />
-                )}
+            <div className="field">
+              <label className="label">Prices</label>
+              <div className="control">
+                <div className="buttons has-addons">
+                  {Search.PRICES.map(id =>
+                    <Price
+                      key={id}
+                      id={id}
+                      onClick={this.filterPrice}
+                      selected={~this.state.priceFilters.indexOf(id)}
+                      small={this.props.options}
+                    />
+                  )}
+                </div>
               </div>
             </div>
-          </div>
 
-          <div className="field">
-            <YeyButton className={cx('button is-medium is-info', {'is-loading':isLoading})} disabled={isLoading}>
-              <span>Yey</span>
-              <span className="icon">
-                <i className="fa fa-random" />
-              </span>
-            </YeyButton>
-          </div>
+            <div className="field">
+              <YeyButton className={cx('button is-link is-medium yey-button', {'is-loading':isLoading})} disabled={isLoading}>
+                <span>Yey</span>
+                <span className="icon">
+                  <i className="fa fa-random" />
+                </span>
+              </YeyButton>
+            </div>
+          </Fields>
         </form>
       </section>
     )
@@ -190,8 +196,8 @@ Search.CATEGORIES = [
   {display_name: 'Coffee', icon: 'coffee', value: 'coffee'}
 ]
 
-const Category = ({category, onClick, selected}) => (
-  <button onClick={e => onClick(e, category)} className={cx('button', {'is-primary': selected})}>
+const Category = ({category, onClick, selected, small}) => (
+  <button onClick={e => onClick(e, category)} className={cx('button', {'is-warning': selected, 'is-small': small})}>
     <span className="icon">
       <i className={'fas fa-' + category.icon} />
     </span>
@@ -199,14 +205,14 @@ const Category = ({category, onClick, selected}) => (
   </button>
 )
 
-const Price = ({id, selected, onClick}) => (
-  <button value={id} onClick={onClick} className={cx('button', {'is-primary': selected})}>
+const Price = ({id, selected, onClick, small}) => (
+  <button value={id} onClick={onClick} className={cx('button', {'is-warning': selected, 'is-small': small})}>
     {repeat('$', id)}
   </button>
 )
 
-const Distance = ({distance, selected, onClick}) => (
-  <button onClick={e => onClick(e, distance)} className={cx('button', {'is-primary': selected})}>
+const Distance = ({distance, selected, onClick, small}) => (
+  <button onClick={e => onClick(e, distance)} className={cx('button', {'is-warning': selected, 'is-small': small})}>
     <span className="icon">
       <i className={'fas fa-' + distance.icon} />
     </span>
@@ -219,4 +225,29 @@ const YeyButton = styled.button`
   margin-top: 15px;
   text-transform: uppercase;
   font-weight: bold;
+`
+
+const Fields = styled.div`
+  @media (min-width: 940px) {
+    ${(props => props.fullWidth && `
+      display: flex;
+
+      .field:not(:last-child) {
+        margin-bottom: 0;
+        margin-right: .75rem;
+      }
+
+      .label {
+        display: none;
+      }
+
+      .button {
+        margin: 0;
+      }
+
+      .yey-button {
+        font-size: 1rem;
+      }
+    `)}
+  }
 `

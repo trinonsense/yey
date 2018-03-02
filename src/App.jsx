@@ -2,23 +2,25 @@ import React from 'react'
 import Search from './Search'
 import Options from './Options'
 import sample from 'lodash.samplesize'
+import styled from 'styled-components'
 
 const SEARCH = 'SEARCH'
 const OPTIONS = 'OPTIONS'
 
 export default class App extends React.PureComponent {
   render() {
-    return [
-      <Search
-        key="search"
-        onResults={this.simplifyOptions.bind(this)}
-      />,
+    return (
+      <Container>
+        <AppSearch fullWidth={this.state.options}>
+          <Search
+            fullWidth={this.state.options}
+            onResults={this.simplifyOptions.bind(this)}
+          />
+        </AppSearch>
 
-      <Options
-        key="options"
-        options={this.state.options}
-      />
-    ]
+        <Options options={this.state.options} />
+      </Container>
+    )
   }
 
   constructor() {
@@ -37,3 +39,19 @@ export default class App extends React.PureComponent {
     })
   }
 }
+
+const Container = styled.div`
+  max-width: 960px;
+  margin-left: auto;
+  margin-right: auto;
+`
+
+const AppSearch = styled.div`
+  max-width: ${({fullWidth}) => fullWidth? 'auto' : '450px'};
+  margin-left: auto;
+  margin-right: auto;
+
+  .section {
+    padding-bottom: 0;
+  }
+`
