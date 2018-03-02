@@ -19,6 +19,7 @@ module.exports = {
     indent: [ 'error', 2 ],
     'linebreak-style': [ 'error', 'unix' ],
     'no-console': 'off',
+    indent: 'off',
     quotes: [ 'error', 'single' ],
     semi: [ 'error', 'never' ]
   }
